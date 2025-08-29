@@ -1,0 +1,45 @@
+<svg viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Define a filter that creates a distorted, cloudy, and blurred effect -->
+        <filter id="fluid-glow-filter" x="-50%" y="-50%" width="200%" height="200%">
+            <!-- Create a noisy texture for fluid motion -->
+            <feTurbulence type="fractalNoise" baseFrequency="0.03 0.04" numOctaves="3" seed="0" result="turbulence"/>
+            
+            <!-- Use the texture to displace the source graphic, creating a distorted, liquid-like look -->
+            <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="70" xChannelSelector="R" yChannelSelector="G" result="displacement"/>
+            
+            <!-- Heavily blur the distorted result to soften it into an ambient glow -->
+            <feGaussianBlur in="displacement" stdDeviation="60" result="soft-blur"/>
+        </filter>
+
+        <!-- Define the color gradients for the shapes with cool tones -->
+        <radialGradient id="coolGrad1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(650 150) rotate(120) scale(400)">
+            <stop stop-color="#3A8DFF"/> <!-- Bright Blue -->
+            <stop offset="0.6" stop-color="#00C9FF"/> <!-- Sky Blue -->
+            <stop offset="1" stop-color="#6F00FF" stop-opacity="0"/> <!-- Violet, fades out -->
+        </radialGradient>
+        
+        <radialGradient id="coolGrad2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(150 450) rotate(60) scale(380)">
+            <stop stop-color="#00FFC2"/> <!-- Aqua Green -->
+            <stop offset="0.7" stop-color="#008080"/> <!-- Teal -->
+            <stop offset="1" stop-color="#1E1E2D" stop-opacity="0"/> <!-- Dark background, fades out -->
+        </radialGradient>
+
+        <radialGradient id="coolGrad3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(400 300) rotate(180) scale(300)">
+            <stop stop-color="#9933FF"/> <!-- Medium Purple -->
+            <stop offset="0.5" stop-color="#CC66FF"/> <!-- Lighter Purple -->
+            <stop offset="1" stop-color="#3A8DFF" stop-opacity="0"/> <!-- Fades to blue -->
+        </radialGradient>
+    </defs>
+
+    <!-- Solid black background -->
+    <rect width="800" height="600" fill="black"/>
+    
+    <!-- Apply the complex filter to a group of shapes -->
+    <g opacity="0.85" filter="url(#fluid-glow-filter)">
+        <!-- Larger, more flowing path shapes for a distinct design -->
+        <path d="M400 100 C 600 -50, 750 250, 600 400 S 200 650, 100 450 Q -50 200, 400 100 Z" fill="url(#coolGrad1)"/>
+        <path d="M200 500 C 350 650, 600 600, 700 450 S 800 200, 550 150 Q 300 100, 200 500 Z" transform="translate(-100 0) scale(1.1)" fill="url(#coolGrad2)"/>
+        <path d="M500 250 C 650 100, 700 400, 500 550 S 200 600, 150 350 Q 100 100, 500 250 Z" transform="translate(50 -100) scale(0.9)" fill="url(#coolGrad3)"/>
+    </g>
+</svg>
