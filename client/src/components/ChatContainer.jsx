@@ -4,8 +4,8 @@ import { Send, ArrowLeft, MoreVertical, Phone, Video } from 'lucide-react';
 // Mock assets - replace with your actual assets
 const assets = {
     profile_martin: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM0Qjc2ODgiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo=',
-    profile_alison: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFQzQ4OTkiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo=',
-    logo_icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxwYXRoIGQ9Ik0yNCAyNEg0MEwyOCA0MEwyNCAyNFoiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjgiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQwX2xpbmVhcl8xXzEiIHgxPSIwIiB5MT0iMCIgeDI9IjY0IiB5Mj0iNjQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzM3NDNEQiIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM0Rjc5QTQiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K'
+    profile_alison: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFQzQ4OTkiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo=',
+    logo_icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxwYXRoIGQ9Ik0yNCAyNEg0MEwyOCA0MEwyNCAyNFoiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjgiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQwX2xpbmVhcl8xXzEiIHgxPSIwIiB5MT0iMCIgeDI9IjY0IiB5Mj0iNjQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzM3NDNEQiIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM0Rjc5QTQiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K'
 };
 
 const ChatContainer = ({ selectedUser, setSelectedUser }) => {
@@ -45,7 +45,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
     };
 
     return selectedUser ? (
-        <div className="h-full flex flex-col relative  backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
+        <div className="h-full flex flex-col relative  backdrop-blur-3xl border border-white/10  shadow-2xl overflow-hidden">
             {/* Floating gradient background */}
             <div className="absolute inset-0  pointer-events-none" />
             
@@ -53,20 +53,20 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
             <div className="relative flex items-center gap-4 p-6 border-b border-white/10 bg-white/5 backdrop-blur-xl">
                 <div className="relative">
                     <img 
-                        src={assets.profile_martin} 
+                        src={selectedUser?.profilePic || assets.profile_martin} 
                         alt="User" 
-                        className="w-12 h-12 rounded-full shadow-lg border-2 border-white/20" 
+                        className="w-12 h-12 rounded-full shadow-lg border-2 border-white/20 object-cover" 
                     />
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white/20 animate-pulse" />
+                    <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${selectedUser?.online ? "bg-green-400" : "bg-red-400"} rounded-full border-2 border-white/20 animate-pulse`} />
                 </div>
                 <div className="flex-1">
                     <div className="flex items-center gap-2">
-                        <h2 className="text-xl font-semibold text-white/90">Martin Johnson</h2>
-                        <div className="px-2 py-1 bg-green-400/20 text-green-300 text-xs rounded-full border border-green-400/30">
-                            Online
+                        <h2 className="text-xl font-semibold text-white/90">{selectedUser?.fullName || "Martin Johnson"}</h2>
+                        <div className={`px-2 py-1 ${selectedUser?.online ? "bg-green-400/20 text-green-300 border-green-400/30" : "bg-red-400/20 text-red-300 border-red-400/30"} text-xs rounded-full border`}>
+                            {selectedUser?.online ? "Online" : "Offline"}
                         </div>
                     </div>
-                    <p className="text-sm text-white/60 mt-1">Active now</p>
+                    <p className="text-sm text-white/60 mt-1">{selectedUser?.online ? "Active now" : "Last seen recently"}</p>
                 </div>
                 
                 <div className="flex items-center gap-2">

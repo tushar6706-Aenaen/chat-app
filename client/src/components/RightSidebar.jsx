@@ -56,19 +56,19 @@ const RightSidebar = () => {
   );
 
   return (
-    <div className="h-full w-80 bg-white/5 backdrop-blur-3xl border-l border-white/10 rounded-l-3xl shadow-2xl overflow-hidden relative">
+    <div className="h-full w-auto\backdrop-blur-3xl border-l border-white/10  shadow-2xl overflow-hidden relative">
       {/* Floating gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 via-transparent to-blue-500/10 pointer-events-none" />
+      <div className="absolute inset-0  pointer-events-none" />
       
       <div className="relative h-full flex flex-col">
         {/* User Profile Section */}
-        <div className="p-6 border-b border-white/10 bg-white/5 backdrop-blur-xl">
+        <div className="p-6 border-b border-white/10  backdrop-blur-xl">
           <div className="flex flex-col items-center text-center space-y-4">
             <div className="relative">
               <img 
                 src={userProfile.avatar} 
                 alt="Profile" 
-                className="w-20 h-20 rounded-full border-3 border-white/20 shadow-lg"
+                className="w-20 h-20 rounded-full border-2 border-white/20 shadow-lg object-cover"
               />
               <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-2 border-white/20 animate-pulse" />
             </div>
