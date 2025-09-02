@@ -1,24 +1,175 @@
-import React from 'react'
-import assets from '../assets/assets'
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, ArrowLeft, MoreVertical, Phone, Video } from 'lucide-react';
+
+// Mock assets - replace with your actual assets
+const assets = {
+    profile_martin: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM0Qjc2ODgiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo=',
+    profile_alison: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFQzQ4OTkiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo=',
+    logo_icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxwYXRoIGQ9Ik0yNCAyNEg0MEwyOCA0MEwyNCAyNFoiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjgiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQwX2xpbmVhcl8xXzEiIHgxPSIwIiB5MT0iMCIgeDI9IjY0IiB5Mj0iNjQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzM3NDNEQiIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM0Rjc5QTQiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K'
+};
 
 const ChatContainer = ({ selectedUser, setSelectedUser }) => {
+    const [messages, setMessages] = useState([
+        {
+            text: "Hey there! 👋 Welcome to Chitchat.",
+            sender: "other",
+            time: "09:00",
+            avatar: assets.profile_martin
+        },
+        {
+            text: "Thanks! This UI looks amazing with all these modern effects!",
+            sender: "me",
+            time: "09:01",
+            avatar: assets.profile_alison
+        }
+    ]);
+    const [input, setInput] = useState("");
+    const chatEndRef = useRef(null);
+
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
+    const handleSend = () => {
+        if (input.trim() === "") return;
+        setMessages([
+            ...messages,
+            {
+                text: input,
+                sender: "me",
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                avatar: assets.profile_alison
+            }
+        ]);
+        setInput("");
+    };
+
     return selectedUser ? (
-        <div className='h-full overflow-scroll relative backdrop-blur-lg'>
-            <div className='flex items-center gap-3 py-3 mx-4 border-b border-stone-500'>
-                <img src={assets.profile_martin} alt="" className='w-8 rounded-full' />
-                <p className='flex-1 text-lg flex items-center gap-2 text-white '> Martin Johnson
-                    <span className='text-green-500 text-xs block rounded-full'>Online</span>
-                </p>
-                <img onClick={() => setSelectedUser(null)} src={assets.arrow_icon} alt="" className='md-hidden max-w-7' />
-                <img src={assets.help_icon} alt="" className='max-md:hidden max-w-7 ' />
+        <div className="h-full flex flex-col relative  backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
+            {/* Floating gradient background */}
+            <div className="absolute inset-0  pointer-events-none" />
+            
+            {/* Header */}
+            <div className="relative flex items-center gap-4 p-6 border-b border-white/10 bg-white/5 backdrop-blur-xl">
+                <div className="relative">
+                    <img 
+                        src={assets.profile_martin} 
+                        alt="User" 
+                        className="w-12 h-12 rounded-full shadow-lg border-2 border-white/20" 
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white/20 animate-pulse" />
+                </div>
+                <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                        <h2 className="text-xl font-semibold text-white/90">Martin Johnson</h2>
+                        <div className="px-2 py-1 bg-green-400/20 text-green-300 text-xs rounded-full border border-green-400/30">
+                            Online
+                        </div>
+                    </div>
+                    <p className="text-sm text-white/60 mt-1">Active now</p>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                    <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 backdrop-blur-sm border border-white/10 hover:scale-105">
+                        <Phone className="w-5 h-5 text-white/80" />
+                    </button>
+                    <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 backdrop-blur-sm border border-white/10 hover:scale-105">
+                        <Video className="w-5 h-5 text-white/80" />
+                    </button>
+                    <button 
+                        onClick={() => setSelectedUser(null)} 
+                        className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 backdrop-blur-sm border border-white/10 hover:scale-105"
+                    >
+                        <ArrowLeft className="w-5 h-5 text-white/80" />
+                    </button>
+                    <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-200 backdrop-blur-sm border border-white/10 hover:scale-105">
+                        <MoreVertical className="w-5 h-5 text-white/80" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Chat Area */}
+            <div className="flex-1 overflow-y-auto px-6 py-6 relative">
+                <div className="flex flex-col gap-6">
+                    {messages.map((msg, idx) => (
+                        <div key={idx} className={`flex ${msg.sender === "me" ? "justify-end" : "justify-start"} animate-fade-in`}> 
+                            <div className={`flex items-end gap-3 max-w-md ${msg.sender === "me" ? "flex-row-reverse" : ""}`}>
+                                <img 
+                                    src={msg.avatar} 
+                                    alt="avatar" 
+                                    className="w-8 h-8 rounded-full shadow-md border border-white/20 flex-shrink-0" 
+                                />
+                                <div className={`relative group ${msg.sender === "me" ? "" : ""}`}>
+                                    <div className={`px-5 py-3 rounded-3xl shadow-lg backdrop-blur-xl border transition-all duration-200 group-hover:scale-[1.02] ${
+                                        msg.sender === "me" 
+                                            ? "bg-gradient-to-r from-blue-500/80 to-purple-600/80 text-white border-white/20 ml-2" 
+                                            : "bg-white/10 text-white/90 border-white/10 mr-2"
+                                    }`}>
+                                        <p className="text-sm leading-relaxed">{msg.text}</p>
+                                        <span className={`text-xs mt-2 block ${
+                                            msg.sender === "me" ? "text-white/70" : "text-white/50"
+                                        }`}>
+                                            {msg.time}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    <div ref={chatEndRef} />
+                </div>
+            </div>
+
+            {/* Input Area */}
+            <div className="relative p-6 bg-white/5 backdrop-blur-xl border-t border-white/10">
+                <div className="flex items-center gap-4 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 p-2 focus-within:border-white/40 transition-all duration-200">
+                    <input
+                        type="text"
+                        className="flex-1 px-4 py-3 bg-transparent border-none outline-none text-white/90 placeholder-white/50 text-sm"
+                        placeholder="Type your message..."
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        onKeyDown={e => { if (e.key === "Enter") handleSend(); }}
+                    />
+                    <button
+                        className={`p-3 rounded-full transition-all duration-200 flex items-center justify-center group ${
+                            input.trim() 
+                                ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 scale-100 hover:scale-105" 
+                                : "bg-white/10 hover:bg-white/20 scale-95"
+                        }`}
+                        onClick={handleSend}
+                    >
+                        <Send className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform duration-200" />
+                    </button>
+                </div>
             </div>
         </div>
     ) : (
-        <div className='flex-col gap-2 text-gray-500 bg-white/10 max-md:hidden  flex items-center justify-center'>
-            <img src={assets.logo_icon} alt="" className='max-w-16' />
-            <p className='text-gray-500'>Chat anytime , anywhere</p>
+        <div className="flex flex-col gap-6 items-center justify-center h-full bg-white/5 backdrop-blur-3xl rounded-3xl border border-white/10 relative overflow-hidden">
+            {/* Floating background elements */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10 pointer-events-none" />
+            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            
+            <div className="relative z-10 flex flex-col items-center gap-6 animate-fade-in">
+                <div className="relative">
+                    <img 
+                        src={assets.logo_icon} 
+                        alt="Logo" 
+                        className="w-20 h-20 opacity-80 animate-bounce" 
+                        style={{ animationDuration: '3s' }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl scale-150" />
+                </div>
+                <div className="text-center space-y-2">
+                    <h3 className="text-2xl text-white/90 font-semibold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+                        Chat anytime, anywhere
+                    </h3>
+                    <p className="text-white/60 text-sm">Select a user to start chatting</p>
+                </div>
+            </div>
         </div>
-    )
+    );
 }
 
-export default ChatContainer
+export default ChatContainer;
