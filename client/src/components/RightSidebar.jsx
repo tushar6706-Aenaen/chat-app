@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Phone, 
   Video, 
@@ -15,27 +15,79 @@ import {
   Palette,
   Download
 } from 'lucide-react';
+import assets from '../assets/assets';
 
-// Mock assets
-const mockMedia = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=150&h=150&fit=crop&crop=center',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=150&h=150&fit=crop&crop=center',
-  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=150&h=150&fit=crop&crop=center',
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=150&h=150&fit=crop&crop=center',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=150&h=150&fit=crop&crop=center',
-  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=150&h=150&fit=crop&crop=center'
-];
-
-const RightSidebar = () => {
+const RightSidebar = ({ selectedUser }) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [activeSection, setActiveSection] = useState('media');
+  const [userProfile, setUserProfile] = useState(null);
+  const [media, setMedia] = useState([]);
 
-  const userProfile = {
-    name: "Martin Johnson",
-    status: "Online",
-    phone: "+1 (555) 123-4567",
-    email: "martin.j@example.com",
-    avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiM0Qjc2ODgiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIj4KPHBhdGggZD0iTTEyIDEyQzkuNTA5IDEyIDcuNSA5Ljk5MSA3LjUgNy41UzcuNSA1LjAwOSA5LjUwOSAzIDEyIDNTMTYuNSA1LjAwOSAxNi41IDcuNVMxNC40OTEgMTIgMTIgMTJaTTEyIDIxQzE1LjY2OCAyMSAxOC42OTUgMTkuMjM3IDIwLjI0MyAxNi41ODhDMTguNTY4IDE1LjIgMTMuOTgyIDE0IDkgMTIuOTY3QzguNDg2IDE0LjM5NCA5LjYzMyAxNi43MjcgMTIgMjFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+'
+  useEffect(() => {
+    if (selectedUser) {
+      fetchUserProfile(selectedUser._id);
+      fetchUserMedia(selectedUser._id);
+    }
+  }, [selectedUser]);
+
+  const fetchUserProfile = async (userId) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setUserProfile(data);
+      } else {
+        // Fallback to mock data
+        setUserProfile({
+          name: selectedUser.fullName,
+          status: selectedUser.online ? "Online" : "Offline",
+          phone: "+1 (555) 123-4567",
+          email: "user@example.com",
+          avatar: selectedUser.profilePic || assets.avatar_icon
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      // Fallback to mock data
+      setUserProfile({
+        name: selectedUser.fullName,
+        status: selectedUser.online ? "Online" : "Offline", 
+        phone: "+1 (555) 123-4567",
+        email: "user@example.com",
+        avatar: selectedUser.profilePic || assets.avatar_icon
+      });
+    }
+  };
+
+  const fetchUserMedia = async (userId) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/media/${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setMedia(data);
+      } else {
+        // Fallback to mock data
+        setMedia([
+          assets.img1,
+          assets.img2,
+          assets.pic1,
+          assets.pic2,
+          assets.pic3,
+          assets.pic4
+        ]);
+      }
+    } catch (error) {
+      console.error('Error fetching media:', error);
+      // Fallback to mock data
+      setMedia([
+        assets.img1,
+        assets.img2,
+        assets.pic1,
+        assets.pic2,
+        assets.pic3,
+        assets.pic4
+      ]);
+    }
   };
 
   const MenuItem = ({ icon: Icon, label, onClick, active = false }) => (
@@ -131,7 +183,7 @@ const RightSidebar = () => {
               <button className="text-xs text-blue-300 hover:text-blue-200 transition-colors">View All</button>
             </div>
             <div className="grid grid-cols-3 gap-2">
-              {mockMedia.map((src, idx) => (
+              {media.map((src, idx) => (
                 <div key={idx} className="relative group cursor-pointer">
                   <img 
                     src={src} 

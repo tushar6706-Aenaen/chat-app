@@ -1,47 +1,97 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, ArrowLeft, MoreVertical, Phone, Video } from 'lucide-react';
-
-// Mock assets - replace with your actual assets
-const assets = {
-    profile_martin: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM0Qjc2ODgiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo=',
-    profile_alison: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFQzQ4OTkiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo=',
-    logo_icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1zbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxwYXRoIGQ9Ik0yNCAyNEg0MEwyOCA0MEwyNCAyNFoiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjgiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQwX2xpbmVhcl8xXzEiIHgxPSIwIiB5MT0iMCIgeDI9IjY0IiB5Mj0iNjQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzM3NDNEQiIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM0Rjc5QTQiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K'
-};
+import assets from '../assets/assets';
 
 const ChatContainer = ({ selectedUser, setSelectedUser }) => {
-    const [messages, setMessages] = useState([
-        {
-            text: "Hey there! 👋 Welcome to Chitchat.",
-            sender: "other",
-            time: "09:00",
-            avatar: assets.profile_martin
-        },
-        {
-            text: "Thanks! This UI looks amazing with all these modern effects!",
-            sender: "me",
-            time: "09:01",
-            avatar: assets.profile_alison
-        }
-    ]);
+    const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false);
     const chatEndRef = useRef(null);
 
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const handleSend = () => {
-        if (input.trim() === "") return;
-        setMessages([
-            ...messages,
-            {
-                text: input,
-                sender: "me",
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                avatar: assets.profile_alison
+    useEffect(() => {
+        if (selectedUser) {
+            fetchMessages(selectedUser._id);
+        }
+    }, [selectedUser]);
+
+    const fetchMessages = async (userId) => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/messages/${userId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setMessages(data);
+            } else {
+                console.error('Failed to fetch messages');
+                // Fallback to mock data if API fails
+                setMessages([
+                    {
+                        text: "Hey there! 👋 Welcome to Chitchat.",
+                        sender: "other",
+                        time: "09:00",
+                        avatar: selectedUser.profilePic || assets.profile_martin
+                    },
+                    {
+                        text: "Thanks! This UI looks amazing!",
+                        sender: "me", 
+                        time: "09:01",
+                        avatar: assets.profile_alison
+                    }
+                ]);
             }
-        ]);
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+            // Fallback to mock data if API fails
+            setMessages([
+                {
+                    text: "Hey there! 👋 Welcome to Chitchat.",
+                    sender: "other",
+                    time: "09:00",
+                    avatar: selectedUser.profilePic || assets.profile_martin
+                },
+                {
+                    text: "Thanks! This UI looks amazing!",
+                    sender: "me",
+                    time: "09:01", 
+                    avatar: assets.profile_alison
+                }
+            ]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSend = async () => {
+        if (input.trim() === "" || !selectedUser) return;
+        
+        const newMessage = {
+            text: input,
+            sender: "me",
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            avatar: assets.profile_alison
+        };
+
+        setMessages([...messages, newMessage]);
         setInput("");
+
+        try {
+            await fetch(`${import.meta.env.VITE_API_URL}/api/messages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    receiverId: selectedUser._id,
+                    content: newMessage.text
+                })
+            });
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
     };
 
     return selectedUser ? (
@@ -90,8 +140,13 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
 
             {/* Chat Area */}
             <div className="flex-1 overflow-y-auto px-6 py-6 relative">
-                <div className="flex flex-col gap-6">
-                    {messages.map((msg, idx) => (
+                {loading ? (
+                    <div className="flex justify-center items-center h-full">
+                        <div className="text-white/60">Loading messages...</div>
+                    </div>
+                ) : (
+                    <div className="flex flex-col gap-6">
+                        {messages.map((msg, idx) => (
                         <div key={idx} className={`flex ${msg.sender === "me" ? "justify-end" : "justify-start"} animate-fade-in`}> 
                             <div className={`flex items-end gap-3 max-w-md ${msg.sender === "me" ? "flex-row-reverse" : ""}`}>
                                 <img 
@@ -115,9 +170,10 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
                                 </div>
                             </div>
                         </div>
-                    ))}
-                    <div ref={chatEndRef} />
-                </div>
+                        ))}
+                        <div ref={chatEndRef} />
+                    </div>
+                )}
             </div>
 
             {/* Input Area */}
@@ -162,7 +218,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl scale-150" />
                 </div>
                 <div className="text-center space-y-2">
-                    <h3 className="text-2xl text-white/90 font-semibold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+                    <h3 className="text-2xl font-semibold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
                         Chat anytime, anywhere
                     </h3>
                     <p className="text-white/60 text-sm">Select a user to start chatting</p>

@@ -1,55 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Settings, LogOut, User, MoreVertical } from 'lucide-react';
-
-// Mock assets and data - replace with your actual imports
-const assets = {
-    logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTYwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8dGV4dCB4PSIxMCIgeT0iMjgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIj5DaGl0Y2hhdDwvdGV4dD4KPC9zdmc+',
-    avatar_icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM2MzY2RjEiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo='
-};
-
-const userDummyData = [
-    {
-        _id: 1,
-        fullName: "Alice Johnson",
-        profilePic: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNFQzQ4OTkiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo='
-    },
-    {
-        _id: 2,
-        fullName: "Bob Smith",
-        profilePic: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM0Qjc2ODgiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo='
-    },
-    {
-        _id: 3,
-        fullName: "Charlie Davis",
-        profilePic: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMxMEI5ODEiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0xMiAxMkM5LjUwOSAxMiA3LjUgOS45OTEgNy41IDcuNUM3LjUgNS4wMDkgOS41MDkgMyAxMiAzUzE2LjUgNS4wMDkgMTYuNSA3LjVTMTQuNDkxIDEyIDEyIDEyWk0xMiAyMUMxNS42NjggMjEgMTguNjk1IDE5LjIzNyAyMC4yNDMgMTYuNTg4QzE4LjU2OCAxNS4yIDEzLjk4MiAxNCA5IDEyLjk2N0M4LjQ4NiAxNC4zOTQgOS42MzMgMTYuNzI3IDEyIDIxWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cjwvc3ZnPgo='
-    },
-    {
-        _id: 4,
-        fullName: "Diana Wilson",
-        profilePic: null
-    },
-    {
-        _id: 5,
-        fullName: "Emma Brown",
-        profilePic: null
-    },
-    {
-        _id: 6,
-        fullName: "Frank Miller",
-        profilePic: null
-    }
-];
+import assets from '../assets/assets';
 
 const Sidebar = ({ selectedUser, setSelectedUser }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [showMenu, setShowMenu] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setUsers(data);
+                } else {
+                    console.error('Failed to fetch users');
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, []);
     
     const handleProfileClick = () => {
         console.log('Navigate to profile');
         setShowMenu(false);
     };
 
-    const filteredUsers = userDummyData.filter(user => 
+    
+    const filteredUsers = users.filter(user => 
         user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -120,7 +105,11 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
 
                 {/* User List */}
                 <div className='flex-1 overflow-y-auto p-4 space-y-2'>
-                    {filteredUsers.length > 0 ? filteredUsers.map((user, index) => (
+                    {loading ? (
+                        <div className="flex justify-center py-8">
+                            <div className="text-white/60">Loading users...</div>
+                        </div>
+                    ) : filteredUsers.length > 0 ? filteredUsers.map((user, index) => (
                         <div
                             onClick={() => { setSelectedUser(user) }}
                             className={`group flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 relative overflow-hidden ${
