@@ -1,11 +1,11 @@
 // Defines routes for sending and fetching messages.
 import express from 'express';
-import { allMessages, sendMessage } from '../controllers/messageController.js';
+import { getMessages, sendMessage } from '../controllers/messageController.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.route('/:chatId').get(protect, allMessages);
+router.route('/:userId').get(protect, getMessages);
 router.route('/').post(protect, sendMessage);
 
 export default router;

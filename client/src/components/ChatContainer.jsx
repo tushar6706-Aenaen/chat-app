@@ -26,11 +26,11 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
                 const data = await response.json();
                 setMessages(data);
             } else {
-                console.error('Failed to fetch messages');
-                // Fallback to mock data if API fails
+                console.log('API not available, using mock messages');
+                // Use mock messages when API is not available
                 setMessages([
                     {
-                        text: "Hey there! 👋 Welcome to Chitchat.",
+                        text: `Hey there! 👋 Welcome to chat with ${selectedUser.fullName}`,
                         sender: "other",
                         time: "09:00",
                         avatar: selectedUser.profilePic || assets.profile_martin
@@ -44,11 +44,11 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
                 ]);
             }
         } catch (error) {
-            console.error('Error fetching messages:', error);
-            // Fallback to mock data if API fails
+            console.log('API not available, using mock messages');
+            // Use mock messages when API fails
             setMessages([
                 {
-                    text: "Hey there! 👋 Welcome to Chitchat.",
+                    text: `Hey there! 👋 Welcome to chat with ${selectedUser.fullName}`,
                     sender: "other",
                     time: "09:00",
                     avatar: selectedUser.profilePic || assets.profile_martin
@@ -78,6 +78,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
         setMessages([...messages, newMessage]);
         setInput("");
 
+        // Try to send to backend, but don't fail if it's not available
         try {
             await fetch(`${import.meta.env.VITE_API_URL}/api/messages`, {
                 method: 'POST',
@@ -90,7 +91,7 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
                 })
             });
         } catch (error) {
-            console.error('Error sending message:', error);
+            console.log('API not available - message saved locally only');
         }
     };
 

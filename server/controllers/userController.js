@@ -1,11 +1,42 @@
 // Handles user-related logic like searching for users.
 import User from '../models/User.js';
 
+export const getUsers = async (req, res, next) => {
+    try {
+        const currentUserId = req.user ? req.user._id : null;
+        
+        // Get all users except the current user
+        const users = await User.find(
+            currentUserId ? { _id: { $ne: currentUserId } } : {}
+        ).select('fullName profilePic online createdAt');
+
+        res.json(users);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getUserById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        
+        const user = await User.findById(id).select('fullName profilePic online email createdAt');
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const searchUsers = async (req, res, next) => {
   const keyword = req.query.search
     ? {
         $or: [
-          { username: { $regex: req.query.search, $options: 'i' } },
+          { fullName: { $regex: req.query.search, $options: 'i' } },
           { email: { $regex: req.query.search, $options: 'i' } },
         ],
       }

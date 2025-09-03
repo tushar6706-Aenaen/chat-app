@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Settings, LogOut, User, MoreVertical } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import assets from '../assets/assets';
 
 const Sidebar = ({ selectedUser, setSelectedUser }) => {
@@ -7,33 +9,92 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
     const [showMenu, setShowMenu] = useState(false);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { user, logout, token } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users`);
+                const headers = token ? {
+                    'Authorization': `Bearer ${token}`
+                } : {};
+                
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users`, { headers });
                 if (response.ok) {
                     const data = await response.json();
                     setUsers(data);
                 } else {
-                    console.error('Failed to fetch users');
+                    console.log('API not available, using mock data');
+                    // Use mock data when API is not available
+                    setUsers([
+                        {
+                            _id: 1,
+                            fullName: "Alice Johnson",
+                            profilePic: null,
+                            online: true
+                        },
+                        {
+                            _id: 2,
+                            fullName: "Bob Smith",
+                            profilePic: null,
+                            online: true
+                        },
+                        {
+                            _id: 3,
+                            fullName: "Charlie Davis",
+                            profilePic: null,
+                            online: false
+                        },
+                        {
+                            _id: 4,
+                            fullName: "Diana Wilson",
+                            profilePic: null,
+                            online: false
+                        }
+                    ]);
                 }
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.log('API not available, using mock data');
+                // Use mock data when API fails
+                setUsers([
+                    {
+                        _id: 1,
+                        fullName: "Alice Johnson",
+                        profilePic: null,
+                        online: true
+                    },
+                    {
+                        _id: 2,
+                        fullName: "Bob Smith",
+                        profilePic: null,
+                        online: true
+                    },
+                    {
+                        _id: 3,
+                        fullName: "Charlie Davis",
+                        profilePic: null,
+                        online: false
+                    },
+                    {
+                        _id: 4,
+                        fullName: "Diana Wilson",
+                        profilePic: null,
+                        online: false
+                    }
+                ]);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchUsers();
-    }, []);
-    
+    }, [token]);
+
     const handleProfileClick = () => {
-        console.log('Navigate to profile');
+        navigate('/profile');
         setShowMenu(false);
     };
 
-    
     const filteredUsers = users.filter(user => 
         user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -73,7 +134,13 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
                                         Settings
                                     </button>
                                     <div className="h-px bg-white/10 mx-2" />
-                                    <button className='w-full flex items-center gap-3 p-3 hover:bg-red-500/20 transition-all duration-200 text-red-400 hover:text-red-300 text-sm'>
+                                    <button 
+                                        onClick={() => {
+                                            logout();
+                                            setShowMenu(false);
+                                        }}
+                                        className='w-full flex items-center gap-3 p-3 hover:bg-red-500/20 transition-all duration-200 text-red-400 hover:text-red-300 text-sm'
+                                    >
                                         <LogOut className="w-4 h-4" />
                                         Logout
                                     </button>

@@ -1,17 +1,12 @@
 // Defines user-related routes, like searching.
 import express from 'express';
-import { searchUsers } from '../controllers/userController.js';
+import { getUsers, getUserById, searchUsers } from '../controllers/userController.js';
 import { protect } from '../middleware/auth.js';
-import { uploadProfilePic } from '../middleware/upload.js';
-import { updateUserProfile } from '../controllers/userController.js'; // Import new controller
-
-
 
 const router = express.Router();
 
-router.route('/').get(protect, searchUsers);
-router.route('/').get(protect, searchUsers);
-router.route('/profile').put(protect, uploadProfilePic, updateUserProfile); // New route
-
+router.route('/').get(getUsers);
+router.route('/search').get(protect, searchUsers);
+router.route('/:id').get(getUserById);
 
 export default router;

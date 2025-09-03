@@ -1,10 +1,10 @@
 // Defines routes for creating and fetching chats.
 import express from 'express';
-import { accessChat, fetchChats } from '../controllers/chatController.js';
+import { createChat, getChats } from '../controllers/chatController.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.route('/').post(protect, accessChat).get(protect, fetchChats);
+router.route('/').post(protect, createChat).get(protect, getChats);
 
 export default router;

@@ -30,43 +30,43 @@ const RightSidebar = ({ selectedUser }) => {
     }
   }, [selectedUser]);
 
-  const fetchUserProfile = async (userId) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setUserProfile(data);
-      } else {
-        // Fallback to mock data
-        setUserProfile({
-          name: selectedUser.fullName,
-          status: selectedUser.online ? "Online" : "Offline",
-          phone: "+1 (555) 123-4567",
-          email: "user@example.com",
-          avatar: selectedUser.profilePic || assets.avatar_icon
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      // Fallback to mock data
-      setUserProfile({
-        name: selectedUser.fullName,
-        status: selectedUser.online ? "Online" : "Offline", 
-        phone: "+1 (555) 123-4567",
-        email: "user@example.com",
-        avatar: selectedUser.profilePic || assets.avatar_icon
-      });
-    }
-  };
-
-  const fetchUserMedia = async (userId) => {
+    const fetchUserProfile = async (userId) => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${userId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setUserProfile(data);
+            } else {
+                console.log('API not available, using mock profile');
+                // Use mock profile when API is not available
+                setUserProfile({
+                    name: selectedUser.fullName,
+                    status: selectedUser.online ? "Online" : "Offline",
+                    phone: "+1 (555) 123-4567",
+                    email: "user@example.com",
+                    avatar: selectedUser.profilePic || assets.avatar_icon
+                });
+            }
+        } catch (error) {
+            console.log('API not available, using mock profile');
+            // Use mock profile when API fails
+            setUserProfile({
+                name: selectedUser.fullName,
+                status: selectedUser.online ? "Online" : "Offline", 
+                phone: "+1 (555) 123-4567",
+                email: "user@example.com",
+                avatar: selectedUser.profilePic || assets.avatar_icon
+            });
+        }
+    };  const fetchUserMedia = async (userId) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/media/${userId}`);
       if (response.ok) {
         const data = await response.json();
         setMedia(data);
       } else {
-        // Fallback to mock data
+        console.log('API not available, using mock media');
+        // Use mock media when API is not available
         setMedia([
           assets.img1,
           assets.img2,
@@ -77,8 +77,8 @@ const RightSidebar = ({ selectedUser }) => {
         ]);
       }
     } catch (error) {
-      console.error('Error fetching media:', error);
-      // Fallback to mock data
+      console.log('API not available, using mock media');
+      // Use mock media when API fails
       setMedia([
         assets.img1,
         assets.img2,
@@ -107,7 +107,7 @@ const RightSidebar = ({ selectedUser }) => {
     </button>
   );
 
-  return (
+  return selectedUser && userProfile ? (
     <div className="h-full w-auto\backdrop-blur-3xl border-l border-white/10  shadow-2xl overflow-hidden relative">
       {/* Floating gradient background */}
       <div className="absolute inset-0  pointer-events-none" />
@@ -263,6 +263,15 @@ const RightSidebar = ({ selectedUser }) => {
         <div className="p-6 border-t border-white/10 bg-white/5 backdrop-blur-xl">
           <MenuItem icon={Settings} label="Chat Settings" />
         </div>
+      </div>
+    </div>
+  ) : (
+    <div className="h-full w-auto backdrop-blur-3xl border-l border-white/10 shadow-2xl overflow-hidden relative flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto">
+          <Settings className="w-8 h-8 text-white/50" />
+        </div>
+        <p className="text-white/60">Select a user to view details</p>
       </div>
     </div>
   );

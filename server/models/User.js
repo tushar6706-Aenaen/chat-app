@@ -3,12 +3,11 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema(
-  // ... (schema definition remains the same)
   {
-    username: { type: String, required: true, unique: true, trim: true },
+    fullName: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, trim: true, lowercase: true, match: [/\S+@\S+\.\S+/, 'is invalid'] },
     password: { type: String, required: true, minlength: 6 },
-    profilePicture: { type: String, default: '/uploads/profiles/default-avatar.png' },
+    profilePic: { type: String, default: null },
     online: { type: Boolean, default: false },
   },
   { timestamps: true }
